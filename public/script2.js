@@ -1,7 +1,7 @@
     (function () {
 
-      var height = 900,
-        width = 1700,
+      var height = 550,
+        width = 1450,
         // 2. This translates long/lat to x/y
         projection = d3.geoMercator(),
         mexico = void 0;
