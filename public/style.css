@@ -29,7 +29,10 @@
     margin-left: 130px;
     }
     .bartext{
-        font-size: 16px;
+        font-size: 15px;
+        line-height: 120%;
+        margin-top: 5px;
+        padding-top: 5%;
     }
     /* --------------------------- */
 
