@@ -5,23 +5,42 @@
     <meta charset="utf-8">
     <title>Mexico</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">     
   </head>
 
 <body>
 
+    <nav>
+        <div class="nav-wrapper">
+          <a href="#" class="brand-logo right">Income - Race</a>
+          <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <li><a href="sass.html">Bar 1</a></li>
+            <li><a href="badges.html">Bar 2</a></li>
+            <li><a href="collapsible.html">Bar 3</a></li>
+          </ul>
+        </div>
+      </nav>
+            
+
   <!-- 1. place holder -->
 
-  <div id="map"></div>
+  <!-- xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" -->
+
+  <div id="map" ></div>
   <script type="text/javascript" src="../../lib/d3.js"></script>
 
   <div id="chartArea"></div>
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+       
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/d3-array.v1.min.js"></script>
   <script src="http://d3js.org/topojson.v1.min.js"></script>
   <script src="./nc_counties.json"></script>
   <!-- <script src="script1.js"></script> -->
-  <script src="script8.js"></script>
-  <script src="script2.js"></script>
+  <script src="barchart.js"></script>
+  <script src="map.js"></script>
    
  
 </body>
