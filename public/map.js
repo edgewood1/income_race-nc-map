@@ -35,16 +35,16 @@
       
         // responsive SVG needs these 2 attributes and no width and height attr
         .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 1400 400")
+        .attr("viewBox", "0 0 1400 600")
         //class to make it responsive
         .classed("svg-content-responsive", true);
 
     var box = svg.append('text')
         .attr('id', 'place')
-        .attr('x', 10)
-        .attr('y', 10)
+        .attr('x', 2)
+        .attr('y', 2)
         .attr("width", 250)
-        .attr("height", 100);
+        .attr("height", 50);
 
     // 6. transform topoJson into json: objects > admin > geometries array 
     d3.json('nc_counties.json', function (error, data) {
@@ -112,11 +112,15 @@
                     // add data to the table - 
 
                     d3.select("#place")
-                        .text("Mean Household Income:  " + number  +  "   Black Percentage: " + ration + " %")
-                        .attr('class', 'text3')
+                        .text("Mean Household Income:  " + number + " Black Percentage: " + ration + " %") 
                         .attr('dx', '195')
                         .attr('dy', '40')
+              
+                        .attr('class', 'text3')
                         .attr('font-size', '20px')
+                 
+                     
+                
                 });
             // //   end pt.2
         };

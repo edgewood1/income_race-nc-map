@@ -25,13 +25,24 @@
       /* text-anchor: middle; */
     }
     .text3 {
-        font-size: 16px;
+        font-size: 20px;
         font-family: Helvetica;
     }
     #chartArea{
-    margin-top: -160px;
-    margin-left: 130px;
+    margin-top: -40px; 
+    /* margin-left: 10px; */
+    /* margin-right: -50px; */
+    max-width: 75%;
+    /* max-height: 50%; */
+    height:auto;
     }
+
+    #map {
+     /* max-height: 50%;
+     height: auto; */
+    }
+
+
     .bartext{
         font-size: 15px;
         line-height: 120%;
@@ -42,23 +53,24 @@
 
     body {
         font-family: "helvetica";
+        height: 100%;
         /* width: 100%; */
     }
 
-    /* .svg-container {
+  .svg-container {
         display: inline-block;
         position: relative;
         width: 100%;
         padding-bottom: 100%; /* aspect ratio */
-        /* vertical-align: top;
+   vertical-align: top;
         overflow: hidden;
     }
-    .svg-content-responsive {
+    /* .svg-content-responsive {
         display: inline-block;
         position: absolute;
         top: 10px;
         left: 0;
-    } */ 
+    }  */
     
     button {
         margin: 0 7px 0 0;

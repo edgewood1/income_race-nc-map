@@ -3,9 +3,11 @@
 (function() {
 
     // 1. set dimensions 
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
-        width = 800 - margin.left - margin.right,
-        height = 370 - margin.top - margin.bottom;
+    // var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    //     width = 800 - margin.left - margin.right,
+    //     height = 370 - margin.top - margin.bottom;
+    var width =800, 
+    height =300;
 
     // 2. set the ranges
     var x = d3.scaleBand()
@@ -15,12 +17,22 @@
             .range([height, 0]);        
 
     // 4. set canvas: add body > svg > group > move top left margin
-    var svg = d3.select("body").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", 
-            "translate(" + margin.left + "," + margin.top + ")");
+    var svg = d3.select("#chartArea").append("svg")
+        // .attr("width", width + margin.left + margin.right)
+        // .attr("height", height + margin.top + margin.bottom)
+        // .attr("width", width)
+        // .attr("height", height)
+        // .append("g")
+        // .attr("transform", 
+        //     "translate(100, 60)")
+            // - above,will move image within the canvas
+            //   // responsive SVG needs these 2 attributes and no width and height attr
+              .attr("preserveAspectRatio", "xMinYMin meet")
+              .attr("viewBox", "-50 0 880 350")
+              //(left/right inside box, higher goes up inside, 
+              //higher makes inside smaller more fits, higher canvas goes down lower )
+              //class to make it responsive
+              .classed("svg-content-responsive", true);
 
     //5. loop through data
     var data =[];
@@ -68,6 +80,7 @@
         .attr("width", x.bandwidth())
         .attr("y", function(d) { return y(d.y); })
         .attr("height", function(d) { return height - y(d.y); });
+        
         
 
         var label = ['race', 'income']
