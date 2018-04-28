@@ -1,5 +1,7 @@
 (function () {
 
+
+
     // 1. h x w of canvas
 
     var height = 550,
@@ -30,6 +32,7 @@
         // .classed("svg-container", true) //container class to make it responsive
 
         .append("svg")
+        .attr("id", "inner_map")
         // .attr("width", width)
         // .attr("height", height)
       
@@ -38,13 +41,17 @@
         .attr("viewBox", "0 0 1400 600")
         //class to make it responsive
         .classed("svg-content-responsive", true);
+    
+    var svg2 = d3.select("#place1")
+        .append("svg")
+        
 
-    var box = svg.append('text')
-        .attr('id', 'place')
-        .attr('x', 2)
-        .attr('y', 2)
-        .attr("width", 250)
-        .attr("height", 50);
+    // svg2.append('text')
+    //     .attr('id', 'place')
+        // .attr('x', 2)
+        // .attr('y', 2)
+        // .attr("width", 250)
+        // .attr("height", 50);
 
     // 6. transform topoJson into json: objects > admin > geometries array 
     d3.json('nc_counties.json', function (error, data) {
@@ -84,6 +91,13 @@
         var white;
         var black;
         var ration;
+
+        var elem = document.querySelector('.modal');
+        var instance = M.Modal.init(elem);
+        // var but=document.getElementsByClassName("btn modal-trigger");
+        // document.getElementById("myBtn").addEventListener("click", jack);
+    
+        //   but.addEventListener('click', jack); 
         
         // calculates data for the top-right table
         function jack(d) {
@@ -97,6 +111,7 @@
                         if (z == element['GEO.id2']) {
                             csvID = element['GEO.id2']
                             number = element.HC01_EST_VC15
+                            name = element['GEO.display-label']
                         }
                     })
                     d2.forEach(function (element, item) {
@@ -110,14 +125,17 @@
                     console.log(ration);
                     
                     // add data to the table - 
+                    instance.open();
+                    // var place = document.getElementById("place1");
+                    // place.innerHTML = number;
 
-                    d3.select("#place")
-                        .text("Mean Household Income:  " + number + " Black Percentage: " + ration + " %") 
-                        .attr('dx', '195')
-                        .attr('dy', '40')
+                    d3.select("#place1")
+                        .html(name + "<br>"+"Mean Household Income:  " + number + "<br>" + "Black Percentage: " + ration + " %") 
+                        // .attr('dx', '195')
+                        // .attr('dy', '40')
               
                         .attr('class', 'text3')
-                        .attr('font-size', '20px')
+                        // .attr('font-size', '16px')
                  
                      
                 
