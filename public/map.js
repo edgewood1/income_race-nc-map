@@ -1,7 +1,5 @@
 (function () {
 
-
-
     // 1. h x w of canvas
 
     var height = 550,
@@ -42,16 +40,10 @@
         //class to make it responsive
         .classed("svg-content-responsive", true);
     
+    // modal -- 
     var svg2 = d3.select("#place1")
         .append("svg")
         
-
-    // svg2.append('text')
-    //     .attr('id', 'place')
-        // .attr('x', 2)
-        // .attr('y', 2)
-        // .attr("width", 250)
-        // .attr("height", 50);
 
     // 6. transform topoJson into json: objects > admin > geometries array 
     d3.json('nc_counties.json', function (error, data) {
@@ -137,7 +129,9 @@
                         .attr('class', 'text3')
                         // .attr('font-size', '16px')
                  
-                     
+                     d3.select(".bar")
+                        // .color
+                        .attr('fill', function (d, i) { return color(i); })
                 
                 });
             // //   end pt.2
