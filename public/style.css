@@ -55,11 +55,8 @@ text {
 
 #chartArea{
     margin-top: 10px; 
-    /* margin-left: 10px; */
-    /* margin-right: -50px; */
-    max-width: 75%;
-    /* max-height: 50%; */
-    height:auto;
+    width: 550px;
+    height: 300px;
     border:2px solid #000;
 }
 

@@ -13,6 +13,7 @@
         var high = 0;
         var z;
         var data=[];
+        var data2=[]
         var master_race_percent=[];
         var income2=[]
         var add = {}
@@ -60,7 +61,9 @@
         //////////////////////////////// MANAGE INCOME/ETHNICITY       
             income.forEach(function (element, item) {
         
-                csvID = element['GEO.id2']
+                csvID = element['GEO.id2'];
+          
+
                 income = Math.round(parseInt(element.HC01_EST_VC15)/1000);
                     if (income > high) {
                         high = income;
@@ -77,11 +80,25 @@
                     income: income, 
                     high: high, 
                     race_percent: race_percent, 
-                    race_percent2: race_percent2
-                }
+                    race_percent2: race_percent2,
+                };
+
+                
+
+                data2.push({x:race_percent2, y:race_percent});
+
                 income2.push(add)
-    
+
+                
             })  //end of income loop
+
+            data2.sort(function(x, y){
+                return d3.ascending(x.x, y.x);
+            })
+            data2[0] = {x:0, y:0};
+            data2 = next(data2);
+            console.log ("first -- ", data2)
+            goToBar(data2);
        
             console.log("income - ", income2)
 
@@ -110,7 +127,7 @@
 
             var color= d3.scaleQuantize()
                 .domain([0, 70])
-                .range(['lightblue', 'orange', 'lightgreen', 'pink']);
+                .range(['IndianRed', 'LightCoral', 'Salmon', 'DarkSalmon', 'LightSalmon', 'Crimson', 'Red', 'FireBrick', 'DarkRed']);
 
             var map = svg.append('g')
                 .attr('class', 'boundary');
@@ -127,7 +144,7 @@
                     return income2[i].csvID;
                 })
                 .attr('fill', function(d, i) {
-                    console.log(income2[i].name  +" -- ", income2[i].race_percent +" -- ", income2[i].csvID)
+                    // console.log(income2[i].name  +" -- ", income2[i].race_percent +" -- ", income2[i].csvID)
                     return color(income2[i].race_percent);
                 })
                 .on('click', info_modal)
@@ -138,10 +155,11 @@
             mexico.exit().remove();
             ////////////////////////////////// MODAL ///////////////////
 
-            var elem = document.querySelector('.modal');
-            var instance = M.Modal.init(elem);
+          
 
             function info_modal(d) {
+                var elem = document.querySelector('.modal');
+                var instance = M.Modal.init(elem);
                 var z = d.properties.GEOID;
                 income2.forEach(function(e, i) {
                     if (z == e.csvID) {
@@ -158,7 +176,7 @@
                 d3.select("#place1")
                     .html(
                         name + "<br>"+"Mean Household Income:  " + 
-                        number + "<br>" + "Black Percentage: " + 
+                        income + "<br>" + "Black Percentage: " + 
                         race + " %" + "<br>" +
                         csvID ) 
                     .attr('class', 'text3')
@@ -189,4 +207,96 @@
                 })
         });
               // BAR CHART -
+
+        function goToBar(data2) {
+
+              var width2 =800, 
+              height2 =300;
+            console.log ("bar", data2)
+              // 2. set the ranges
+              var x = d3.scaleBand()
+                      .range([0, width2])
+                      .padding(0.1);
+              var y = d3.scaleLinear()
+                      .range([height2, 0]);        
+          
+              // 4. set canvas: add body > svg > group > move top left margin
+              var svg2 = d3.select("#chartArea").append("svg")
+                  // .attr("width", width + margin.left + margin.right)
+                  // .attr("height", height + margin.top + margin.bottom)
+                  // .attr("width", width)
+                  // .attr("height", height)
+                  // .append("g")
+                  // .attr("transform", 
+                  //     "translate(100, 60)")
+                      // - above,will move image within the canvas
+                      //   // responsive SVG needs these 2 attributes and no width and height attr
+                        .attr("preserveAspectRatio", "xMinYMin meet")
+                        .attr("viewBox", "-50 0 880 350")
+                        //(left/right inside box, higher goes up inside, 
+                        //higher makes inside smaller more fits, higher canvas goes down lower )
+                        //class to make it responsive
+                        .classed("svg-content-responsive", true);
+
+           // 2.  - Scale the range of the data in the domains
+           x.domain(data2.map(function(d) { return d.x; }));
+           y.domain([0, d3.max(data2, function(d) { return d.y; })]);
+   
+           // 4. add barchart 
+           svg2.selectAll(".bar")
+               .data(data2)
+               .enter().append("rect")
+               .attr("class", "bar")
+               .attr("x", function(d) { return x(d.x); })
+               .attr("width", x.bandwidth())
+               .attr("y", function(d) { return y(d.y); })
+               .attr("height", function(d) { return height - y(d.y); });
+               
+               
+   
+               var label = ['race', 'income']
+           
+           // add the x Axis and HEADER
+           svg2.append("g")
+               .attr("transform", "translate(0," + height + ")")
+               .call(d3.axisBottom(x))
+           svg2.append('g')
+               .append('text')
+               .attr('x', 200)
+               .attr('y', 330)
+               .attr('class', 'bartext')
+               .text('median income in thousands')
+   
+           // add the y Axis and HEADER
+           svg2.append("g")
+               .call(d3.axisLeft(y))
+           svg2.append('g')
+               .append('text')
+               .attr('class', 'bartext')
+               .attr('transform', 'translate(-30,180)rotate(-90)')
+               .attr('font-size', '20px')
+               .text('black pop. %');  
+    }
+      
+           function next(here) {
+        //    console.log(here);
+               var data=[];
+               var c =0;
+               // creates 3 sets of 4
+               for (v=0; v<9; v++){
+                   var x = 0;
+                   var y = 0;
+                   for (w=0+c;  w<9+c; w++) {
+                       x += (here[w].x);
+                       y += (here[w].y);
+                   }
+                   data.push({x, y});
+                   data[v].x=data[v].x/10;
+                   data[v].y=data[v].y/10;
+                   c+=11;
+               }
+               console.log(data);
+               return data;
+   
+           }
 })()
