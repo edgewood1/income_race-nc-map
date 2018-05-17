@@ -1,3 +1,13 @@
+body {
+    font-family: "Times";
+    height: 100%;
+    /* width: 100%; */
+}
+
+.nav-wrapper {
+     background-color: #277b2e !important;
+}
+
 .boundary, rect {
       fill: #ddd;
       stroke: #888;
@@ -10,291 +20,90 @@ svg {
     border-color: #ccc;
 }
 
-/* all svg text elements */
-text {
-    font-size: 12px;
-    font-family: Helvetica;
-    stroke-width: 2;
-    text-anchor: middle;
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    /* below - aspect ratio */
+    padding-bottom: 100%;  
+    vertical-align: top;
+    overflow: hidden;
 }
 
- /* text box within the map */
-.text3 {
-    font-size: 16px;
-    font-family: Helvetica;
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    width: 100%;
+    top: 10px;
+    left: 0;
 }
 
-#modal1 {
-    /* margin-top: -40px;
-    padding-top: -40px; */
-    width: 320px;
-    height: 150px;
-}
-/* map box */
+/* html map box: how much we're allowed to see*/
 
 #map {
-    /* max-height: 50%;
-    height: auto; */
-    margin-top: 10px;
-    width: 550px;
+    margin-top: 35px;
     height: 300px;
     border:2px solid #000;
-    overflow: scroll;
+    overflow: hidden;
 }
 
-/* SVG map box */
+/* SVG map box - most of this is covered up */
 
 #inner_map {
     height : 600px;
     width : 1450px;
 }
 
- 
+.side-nav {
+    background-color:#81c784 !important;
+}
 
 /* bar chart box */
 
-#chartArea{
+#place1 {
     margin-top: 10px; 
-    width: 550px;
-    height: 300px;
+    /* padding-top: 20px; */
+    /* width: 275px; */
+    height: 270px;
     border:2px solid #000;
 }
 
-
-
+#chartArea {
+    margin-top: 10px; 
+    height: 270px;
+    border:2px solid #000;
+}
 
 .bartext{
-    font-size: 15px;
+    font-size: 20px;
     line-height: 120%;
     margin-top: 5px;
     padding-top: 5%;
 }
 /* --------------------------- */
+/* all svg text elements */
 
-body {
-    font-family: "helvetica";
-    height: 100%;
-    /* width: 100%; */
-}
-
-.svg-container {
-    display: inline-block;
-    position: relative;
-    width: 100%;
-    padding-bottom: 100%; /* aspect ratio */
-vertical-align: top;
-    overflow: hidden;
-}
-/* .svg-content-responsive {
-    display: inline-block;
-    position: absolute;
-    top: 10px;
-    left: 0;
-}  */
-
-button {
-    margin: 0 7px 0 0;
-    background-color: #f5f5f5;
-    border: 1px solid #dedede;
-    border-top: 1px solid #eee;
-    border-left: 1px solid #eee;
-
+#text {
     font-size: 12px;
-    line-height: 130%;
-    text-decoration: none;
-    font-weight: bold;
-    color: #565656;
-    cursor: pointer;
-}
-
-.box {
-    width: 200px;
-    height: 200px;
-    margin: 40px;
-    float: left;
-    text-align: center;
-    border: #969696 solid thin;
-    padding: 5px;
-}
-
-.red {
-    background-color: #e9967a;
-    color: #f0f8ff;
-}
-
-.blue {
-    background-color: #add8e6;
-    color: #f0f8ff;
-}
-
-.cell {
-    min-width: 40px;
-    min-height: 20px;
-    margin: 5px;
-    float: left;
-    text-align: center;
-    border: #969696 solid thin;
-    padding: 5px;
-}
-
-.fixed-cell {
-    min-width: 40px;
-    min-height: 20px;
-    margin: 5px;
-    position: fixed;
-    text-align: center;
-    border: #969696 solid thin;
-    padding: 5px;
-}
-
-.h-bar {
-    min-height: 15px;
-    min-width: 10px;
-    background-color: steelblue;
-    margin-bottom: 2px;
-    font-size: 11px;
-    color: #f0f8ff;
-    text-align: right;
-    padding-right: 2px;
-}
-
-.v-bar {
-    min-height: 1px;
-    min-width: 30px;
-    background-color: #4682b4;
-    margin-right: 2px;
-    font-size: 10px;
-    color: #f0f8ff;
-    text-align: center;
-    width: 10px;
-    display: inline-block;
-}
-
-.baseline {
-    height: 1px;
-    background-color: black;
-}
-
-.clear {
-    clear: both;
-}
-
-.selected {
-    background-color: #f08080;
-}
-
-.control-group {
-    padding-top: 10px;
-    margin: 10px;
-}
-
-.table {
-    width: 70%;
-}
-
-.table td, th {
-    padding: 5px;
-}
-
-.table-header {
-    background-color: #00AFEF;
-    font-weight: bold;
-}
-
-.table-row-odd {
-    background-color: #f0f8ff;
-}
-
-.table-row-odd {
-    background-color: #d3d3d3;
-}
-
-.code {
-    display: inline-block;
-    font-style: italic;
-    background-color: #d3d3d3;
-    border: #969696 solid thin;
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.countdown{
-    width: 150px;
-    height: 150px;
-    font-size: 5em;
-    font-weight: bold;
-}
-
-.axis .grid-line{
-    stroke: black;
-    shape-rendering: crispEdges;
-    stroke-opacity: .2;
-}
-
-.line{
-    fill: none;    
-    stroke: steelblue;
+    font-family: Helvetica;
     stroke-width: 2;
+    text-anchor: middle;
 }
 
-.dot {
-    fill: #fff;
-    stroke: steelblue;
+.bar_text {
+    font-size: 16px !important;
 }
 
-.area {
-    stroke: none;
-    fill: steelblue;
-    fill-opacity: .2;
+ /* text within modal */
+
+.text3 {
+    font-size: 16px;
+    /* font-family: Helvetica; */
 }
 
-.pie text{
-    fill: white;
-    font-weight: bold;
-}
-
-._0{
-    stroke: none;
-    fill: darkred;
-    fill-opacity: .7;
-}
-
-._1 {
-    stroke: none;
-    fill: red;
-    fill-opacity: .7;
-}
-
-._2 {
-    stroke: none;
-    fill: blue;
-    fill-opacity: .7;
-}
-
-._3 {
-    stroke: none;
-    fill: green;
-    fill-opacity: .7;
-}
-
-._4{
-    stroke: none;
-    fill: yellow;
-    fill-opacity: .7;
-}
-
-._5{
-    stroke: none;
-    fill: blueviolet;
-    fill-opacity: .7;
-}
-
-.bubble{
-    fill-opacity: .3;
-}
+/* miscellaneous ----  */
 
 .bar{
     stroke: none;
-    fill: steelblue;
+    fill: #277b2e;
 }

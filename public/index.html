@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="utf-8">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
   <title>Mexico</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <!-- Compiled and minified CSS -->
@@ -11,66 +12,73 @@
 
 <body>
 
-  <nav>
-    <div class="nav-wrapper">
-      <a href="#" class="brand-logo right">Income - Race</a>
-      <ul id="nav-mobile" class="left hide-on-med-and-down">
-        <li><a href="sass.html">Bar 1</a></li>
-        <li><a href="badges.html">Bar 2</a></li>
-        <li><a href="collapsible.html">Bar 3</a></li>
-      </ul>
-    </div>
-  </nav>
-
-    <!-- Modal Trigger -->
-    <!-- <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a> -->
-
-    <!-- Modal Structure -->
-    <div id="modal1" class="modal">
-      <div class="modal-content">
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper">
+ 
+                    <ul>
+            <a href="#!" style="font-size : 26px">NC Income Disparity</a>
+        
+         
+            </ul>
+          </div>
+          <div class="nav-wrapper">
+ 
+                    <ul>
+        
+              <li><a id='black'>Black</a></li>
+              <li><a id='brown'>Brown</a></li>
+              <li><a id='education'>Education</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+            
    
+<div id = "description" style="margin-top:75px; margin-bottom: -50px; padding-right: 10px; padding-left:10px">
+<p>Click on the county for details regarding income and race details as well as a view of the counties place in the barchart.  The barchart shows an upward trend between mean income and white population, implying that business, and resources that enable business, flock to counties with higher white populations. </p> 
+</div>
+<div>
+  <div class="container" style="margin-top: 35px">
+    <div class="row">
+
+      <div class="col s12" id="map" >
+      </div>
+      <div class="col s12 m7">
+        <div class="svg-container" id="chartArea" >
+
+        </div>
+      </div>
+      <div class="col s12 m5">
+        <div class ="textArea" id="place1"></div>
+      </div>     
+    </div>  
+  </div>
+</div>
+   
+ 
+    <!-- Modal Structure -->
+
+    <!-- <div id="modal1">
+      <div class="modal modal-content">
         <p id="place1"></p>
       </div>
-      <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Return</a>
-      </div>
-    </div>
-
-    <!-- Modal Trigger -->
-  <!-- <button data-target="modal1" id="myBtn" class="btn modal-trigger">Modal</button> -->
-          
-  <!-- 1. place holder -->
-  <!-- xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" -->
-
-  <div class="container">
-    <div class="row">
-      <div class="col s12">
-        <div id="map" ></div>
+    </div> -->
  
-
-  <!-- <div id="textArea"></div> -->
-
-<!-- <div class="container"> -->
-  <!-- <div class="row"> -->
-    <!-- <div class="col s12"> -->
-      <div id="chartArea"></div>
-    <!-- </div> -->
-  <!-- </div> -->
-<!-- </div> -->
-  
-
-  
-
-  <!-- Compiled and minified JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.js"></script>
   <script type="text/javascript" src="../../lib/d3.js"></script>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/d3-array.v1.min.js"></script>
   <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/d3-zoom/1.7.1/d3-zoom.js'></script>
   <script src="./nc_counties.json"></script>
-  <!-- <script src="script1.js"></script> -->
+  <script src="./map3.js"></script>
   <!-- <script src="barchart.js"></script> -->
-  <script src="map2.js"></script>
+  <!-- <script src="./dist/bundle.js"></script> -->
    
  
 </body>

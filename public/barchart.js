@@ -47,7 +47,7 @@
 
             d1.forEach(function (element, item) {     
                 csvID = element['GEO.id2'];
-                // high = Math.max.apply(Math, parseInt(element.HC01_EST_VC15));
+                high = Math.max.apply(Math, parseInt(element.HC01_EST_VC15));
                 number = Math.round(parseInt(element.HC01_EST_VC15)/1000);
                 if (number > high) {
                     high = number;
@@ -119,15 +119,18 @@
             for (v=0; v<9; v++){
                 var x = 0;
                 var y = 0;
+                // create an object of first 10 x, y pairs
                 for (w=0+c;  w<9+c; w++) {
                     x += (here[w].x);
                     y += (here[w].y);
                 }
+                // push first object into array
                 data.push({x, y});
                 data[v].x=data[v].x/10;
                 data[v].y=data[v].y/10;
                 c+=11;
             }
+            // return an array of 10 objects, each with x, y
             console.log(data);
             return data;
 
