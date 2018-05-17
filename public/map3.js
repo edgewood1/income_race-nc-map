@@ -35,7 +35,7 @@ var choice = "black";
 var build = {};
 
 $("#black").on("click", function() {
-    console.log("black!")
+ 
     barChartCoord=null;
     $("#map").empty();
     $("#chartArea").empty();
@@ -44,7 +44,7 @@ $("#black").on("click", function() {
     //refresh sc
 })   
 $("#brown").on("click", function() {
-    console.log("brown!")
+  
     barChartCoord =null;
     $("#chartArea").empty();
     choice = "brown";
@@ -73,7 +73,7 @@ build.svg = d3.select("#map")
     .call(d3.zoom()
         .scaleExtent([1/1.5,3])
         // .extent([[0, 0], [width, height]])
-        .translateExtent([[-275,0], [width,800]])
+        .translateExtent([[-275,0], [width+100,800]])
         .on("zoom", function () {
             build.svg.attr("transform", d3.event.transform)
         })
@@ -126,7 +126,7 @@ function setup_map (choice, build) {
             s = .85 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
             t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
             build.projection.scale(s).translate(t);
-console.log("income -- ", income)
+
             income.forEach(function(element, item) {
                 var income3 = Math.round(parseInt(element.HOUSEHOLD_MEAN)/1000);
                 if (income3 > highest_income) {
@@ -137,7 +137,7 @@ console.log("income -- ", income)
         // manage income / ethnicity data
 
             income.forEach(function (element, item) {
-                // console.log(element);
+        
                 // csvID = element['GEO.id2'];
                 csvID = element.ID;
                 income = Math.round(parseInt(element.HOUSEHOLD_MEAN)/1000);
@@ -182,7 +182,7 @@ console.log("income -- ", income)
                  
             })  //end of income loop
         
-            console.log(barChartCoord)
+ 
         barChartCoord.sort(function(x, y){
             return d3.ascending(x.x, y.x);
         })
@@ -207,7 +207,7 @@ console.log("income -- ", income)
 
 function create_map() {
 
-    console.log("hit!!")
+  
 
     var gradient = ["#3CC953", "#47D268", "#52DB7D", "#5DE493", "#68EDA8", "#74F7BE"]
 
@@ -266,7 +266,7 @@ function create_map() {
     // get and add county names - 
     var cityText = build.svg.selectAll('text')
         .data(states.features);
-console.log(states.features)
+ 
     cityText.enter()
         .append('text')
         .style("font", "11px times")
@@ -310,10 +310,10 @@ function create_barChart(barChartCoord) {
    svg2 = d3.select("#chartArea")
         .append("svg")
         .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "-60 -50 480 400")
+        .attr("viewBox", "-120 -60 500 400")
         .classed("svg-content-responsive", true)
-        //1 - highest_incomeer goes left, 
-        //2 - highest_incomeer goes up
+        //1 - higher goes left, 
+        //2 - higher goes up
         //3- lower makes inside bigger
         //4- highest_incomeer makes border larger
         //class to make it responsive
@@ -335,7 +335,7 @@ function create_barChart(barChartCoord) {
         .attr("y", function(d) { return y(d.y); })
         .attr("height", function(d) { return height2 - y(d.y); })
       
-        console.log(barChartCoord);
+ 
 
     // add the x Axis and HEADER
     svg2.append("g")
@@ -421,7 +421,7 @@ var id =0;
         
     }
 
-console.log(id);
+ 
 
 
 
@@ -440,7 +440,7 @@ console.log(id);
 // returns - data
 
 function create_bars(here) {
-    console.log(here)
+ 
     var data=[];
     var c =0;
     // creates 3 sets of 4
@@ -456,7 +456,7 @@ function create_bars(here) {
         data[v].y=Math.round(data[v].y/10);
         c+=10;
     }
-    console.log(data);
+ 
     return data;
 }
 
