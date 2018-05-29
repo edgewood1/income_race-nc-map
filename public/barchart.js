@@ -38,8 +38,8 @@
     var data =[];
     var high =0;
     d3.queue()
-        .defer(d3.csv, 'income.csv')
-        .defer(d3.csv, 'ethnicity.csv')
+        .defer(d3.csv, './data/income.csv')
+        .defer(d3.csv, './data/ethnicity.csv')
             .await(function(error, d1, d2) {
                 console.log(d1);
             // high = Math.max.apply(parseInt(Math, d1.map(function(o){return o.HC01_EST_VC15;})));   

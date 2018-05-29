@@ -108,10 +108,10 @@ function setup_map (choice, build) {
 
     // transform topoJson into json: objects > admin > geometries array 
     d3.queue()
-        .defer(d3.json, 'nc_counties.json')
-        .defer(d3.csv, 'income2.csv')
+        .defer(d3.json, './data/nc_counties.json')
+        .defer(d3.csv, './data/income2.csv')
         // .defer(d3.csv, 'ethnicity.csv')
-        .defer(d3.csv, 'races.csv')
+        .defer(d3.csv, './data/races.csv')
         .await(function(error, data, income, ethnicity) {
         if (error) return;
 
