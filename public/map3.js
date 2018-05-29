@@ -406,18 +406,21 @@ function color_bar(d, income) {
     // .filter(function(d) {return d})
     .style('fill', '#277b2e'); 
 var id =0;
+
+// 45 48 51 52 55 58 60 63 69 85
     switch (true) {
-        case (income<=37 ): id='37'; break;
-        case (income>37 && income <=47 ): id = '47'; break;
-        case (income>47 && income <=50 ):  id = '51'; break;
+        case (income<=45 ): id='45'; break;
+        case (income>45 && income <=48 ): id = '48'; break;
+        case (income>48 && income <=51 ):  id = '51'; break;
         
-        case (income>50&& income <=53 ): id = '54'; break;
-        case (income>53 && income <=56 ):  id = '57'; break;
+        case (income>51 && income <=52 ): id = '52'; break;
+        case (income>52 && income <=55 ):  id = '55'; break;
         
-        case (income>56 && income <=62 ): id = '62'; break;
-        case (income>62 && income <=67 ): id = '68'; break;
-        case (income>67 && income <=75 ): id = '76'; break;
-        case (income>75): id = '87'; break;
+        case (income>55 && income <=58 ): id = '58'; break;
+        case (income>58 && income <=60 ): id = '60'; break;
+        case (income>60 && income <=63 ): id = '63'; break;
+        case (income>63 && income <=69 ): id = '69'; break;
+        case (income>70): id = '87'; break;
         
     }
 
