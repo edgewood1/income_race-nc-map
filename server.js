@@ -3,6 +3,8 @@ const express = require('express')
 
 const app = express()
 
+var PORT = process.env.PORT || 3002;
+
 const path = require("path");
 
 var bodyParser = require("body-parser");
@@ -25,4 +27,4 @@ app.use(express.static("./public"));
 
  
 
-app.listen(3001, () => console.log('Example app listening on port 3001!'))
+app.listen(PORT, () => console.log('Example app listening on '+ PORT))
