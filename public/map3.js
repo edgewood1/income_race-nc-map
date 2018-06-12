@@ -33,7 +33,7 @@ var add = {}
 var mexico = void 0;
 var choice = "black";
 var build = {};
-
+var final_race =[];
 $("#black").on("click", function() {
  
     barChartCoord=null;
@@ -104,6 +104,7 @@ setup_map(choice, build)
 // return - nothing 
 /////////////////////////////
 
+
 function setup_map (choice, build) {
 
     // transform topoJson into json: objects > admin > geometries array 
@@ -172,11 +173,15 @@ function setup_map (choice, build) {
                     income_ratio: income_ratio,
                     hispanic_ratio: hispanic_ratio
                 }; 
+
+                final_race.push(race_ratio);
+                // console.log(total_race);
                 
                 if (choice=="black") {
                 barChartCoord.push({x:income_ratio, y:race_ratio})
             } else if (choice == "brown"){
-                barChartCoord.push({x:income_ratio, y:hispanic_ratio})                
+                race_ratio=hispanic_ratio;
+                barChartCoord.push({x:income_ratio, y:race_ratio})                
             };
                 income2.push(add) 
                  
@@ -196,7 +201,7 @@ function setup_map (choice, build) {
     create_barChart(barChartCoord);
 
     // add color to the map
-    create_map() 
+    create_map(total_race) 
 })
 
 /////////////////////////////
@@ -205,34 +210,38 @@ function setup_map (choice, build) {
 // return - nothing 
 /////////////////////////////
 
-function create_map() {
+function create_map(final_race) {
 
+     //Update
+    // scaleLinear -  
+    // scaleThreshold
+    // scaleQuantile
+    // scaleQuantize
+    // scaleSequential 
+    // var color = d3.scaleSequential(d3.interpolatePiYG)
+    // var color = d3.scaleSequential()
+    // .interpolator(d3.interpolateViridis);
   
 
-    var gradient = ["#3CC953", "#47D268", "#52DB7D", "#5DE493", "#68EDA8", "#74F7BE"]
+    // var gradient = ["#3CC953", "#47D268", "#52DB7D", "#5DE493", "#68EDA8", "#74F7BE"]
+    // var gradient = ['blue', 'green', 'red', 'orange', 'yellow']
+    // var gradient = ['IndianRed', 'LightCoral', 'Salmon', 'DarkSalmon', 'LightSalmon', 'Crimson', 'Red', 'FireBrick', 'DarkRed']
+    var gradient = ['red', 'yellow']
+    // var domain = [0,10,20,30,40,50,60,70]; 
 
-    var color = d3.scaleThreshold()
-        .domain([5, 20, 35, 50, 65])
-        .range(gradient)
+    // var domain = [5, 20, 35, 50, 65]; 
+    var domain = [0,70]; 
 
-        // https://www.strangeplanet.fr/work/gradient-generator/index.php
-
-    // var color = d3.scaleSequential()
-    // .domain([5, 70])
-    // .interpolator(d3.interpolateViridis);
-
-    // var color = d3.scaleLinear()
-   
-    //     .domain([0,10,20,30,40,50,60,70])
-    // //     .range(['red', '#ddd', 'blue'])
-    //     .range(['IndianRed', 'LightCoral', 'Salmon', 'DarkSalmon', 'LightSalmon', 'Crimson', 'Red', 'FireBrick', 'DarkRed'])
+    // 45 55  65 75 85 
  
-       
-    
-
-    // var color= d3.scaleQuantize()
+    // var color = d3.scaleSequential()
     //     .domain([0, 70])
-    //     .range(['IndianRed', 'LightCoral', 'Salmon', 'DarkSalmon', 'LightSalmon', 'Crimson', 'Red', 'FireBrick', 'DarkRed']);
+    //     .interpolator(d3.interpolateViridis)
+    
+ 
+    var color = d3.scaleLinear()
+        .domain(domain)
+        .range(gradient)
 
     var map = build.svg.append('g')
         .attr('class', 'boundary');
@@ -251,6 +260,7 @@ function create_map() {
         .style('fill', function(d, i) {
             // console.log(income2[i].name  +" -- ", income2[i].race_ratio +" -- ", income2[i].csvID+ "--id--" + i)
             next = color(income2[i].race_ratio);
+            console.log(next, income2[i].race_ratio, income2[i].name);
           
             return next
           
@@ -420,12 +430,9 @@ var id =0;
         case (income>58 && income <=60 ): id = '60'; break;
         case (income>60 && income <=63 ): id = '63'; break;
         case (income>63 && income <=69 ): id = '69'; break;
-        case (income>70): id = '87'; break;
+        case (income>70): id = '85'; break;
         
     }
-
- 
-
 
 
    d3.select('#d'+id)
