@@ -1,10 +1,7 @@
 $( document ).ready(function() {
     $(".button-collapse").sideNav();
- 
   });
 
-  // import * as d3Chromatic from 'd3-scale-chromatic'
-  
 // svg variables
 var height = 550,
     width = 1450;
@@ -14,7 +11,6 @@ var height = 550,
         height = 550 - margin.top - margin.bottom;
     
 // data variables 
- 
 var z, 
     income,
     color,
@@ -32,26 +28,24 @@ var data =[]
 var income2=[]
 var add = {}
 var mexico = void 0;
-var choice = "black";
+var choice = "Black";
 var build = {};
 var final_race =[];
 $("#black").on("click", function() {
- 
     barChartCoord=null;
     $("#map").empty();
     $("#chartArea").empty();
-    choice = "black";
+    choice = "Black";
     build_map(choice, build)
-    //refresh sc
+
 })   
 $("#brown").on("click", function() {
-  
     barChartCoord =null;
+    $("#map").empty();
     $("#chartArea").empty();
-    choice = "brown";
+    choice = "Brown";
     build_map(choice, build);
 })   
-
 
 
 build_map(choice, build);
@@ -92,7 +86,7 @@ build.svg = d3.select("#map")
     .classed("svg-content-responsive", true)
     // create_map(svg, path, mexico, projection);
 
-setup_map(choice, build)
+    setup_map(choice, build)
 }
 
        
@@ -105,6 +99,7 @@ setup_map(choice, build)
 // return - nothing 
 /////////////////////////////
 
+var main_data = {};
 
 function setup_map (choice, build) {
 
@@ -118,10 +113,9 @@ function setup_map (choice, build) {
         if (error) return;
 
         // manage map data -- 
-
             // states = an array of geojson objcts: type, properties, arcs
             states = topojson.feature(data, data.objects.north_carolina1);
-            
+  
             // reset scale and translate
             build.projection.scale(1).translate([0, 0]);
             b = build.path.bounds(states); 
@@ -135,199 +129,88 @@ function setup_map (choice, build) {
                     highest_income = income3;
                 }
             })
+
+            income.forEach(function(e, i) {
+                states.features.forEach(function (f, j) { 
+                    if (e.ID==f.properties.GEOID) {          
+                        f.properties.INCOME = e.HOUSEHOLD_MEDIAN 
+                        f.properties.INCOME_PERCENT = Math.round(e.HOUSEHOLD_MEDIAN / highest_income)
+                    }
+                })
+            })
+
+            ethnicity.forEach(function(e, i) {
+                states.features.forEach(function (f, j) { 
+                    if (e.ID==f.properties.GEOID) {               
+                        f.properties.HISPANIC = parseInt(e.HISPANIC)
+                        f.properties.BLACK = parseInt(e.BLACK)
+                        f.properties.NATIVE = parseInt(e.NATIVE)
+                        f.properties.WHITE = parseInt(e.WHITE)
+                        f.properties.TOTAL = parseInt(e.TOTAL)
+                        f.properties.BLACK_PERCENT = Math.round((f.properties.BLACK / f.properties.TOTAL)*100)
+                        f.properties.HISPANIC_PERCENT = Math.round((f.properties.HISPANIC / f.properties.TOTAL)*100)
+                    }  
+                })
+            })
+            main_data = states.features;          
            barChartCoord = [];
         // manage income / ethnicity data
 
-            income.forEach(function (element, item) {
+            main_data.forEach(function (e, i) {
         
-                // csvID = element['GEO.id2'];
-                csvID = element.ID;
-                income = Math.round(parseInt(element.HOUSEHOLD_MEAN)/1000);
-           
-                name = element.GEO;
-                // white = parseInt(ethnicity[item].HD01_VD02);
-                // black = parseInt(ethnicity[item].HD01_VD03);
-                // race_ratio = Math.round(black / (black +white )*100);  
-
-                white = ethnicity[item].WHITE;
-               
-                black = (ethnicity[item].BLACK);
-          
-                hispanic = (ethnicity[item].HISPANIC);
-                total_race = (ethnicity[item].TOTAL);
-                // white = parseInt(ethnicity[item].WHITE);
-                // black = parseInt(ethnicity[item].BLACK);
-                hispanic_ratio = Math.round((hispanic / total_race) *100);   
-                
-                race_ratio = Math.round((black / total_race) *100);   
-             
-                income_ratio=Math.round((income / highest_income)*100);
-               
-                
-                
-                add = {
-                    csvID: csvID, 
-                    name: name,
-                    income: income, 
-                    highest_income: highest_income, 
-                    race_ratio: race_ratio, 
-                    income_ratio: income_ratio,
-                    hispanic_ratio: hispanic_ratio
-                }; 
-
-                final_race.push(race_ratio);
-                // console.log(total_race);
-                
-                if (choice=="black") {
-                barChartCoord.push({x:income_ratio, y:race_ratio})
-            } else if (choice == "brown"){
-                race_ratio=hispanic_ratio;
-                barChartCoord.push({x:income_ratio, y:race_ratio})                
-            };
-                income2.push(add) 
-                 
+                if (choice=="Black") {
+                    barChartCoord.push({x:e.properties.INCOME_PERCENT, y:e.properties.BLACK_PERCENT})
+                } else if (choice == "Brown"){
+                    barChartCoord.push({x:e.properties.INCOME_PERCENT, y:e.properties.HISPANIC_PERCENT})                
+                };                    
             })  //end of income loop
         
- 
-        barChartCoord.sort(function(x, y){
-            return d3.ascending(x.x, y.x);
-        })
+            barChartCoord.sort(function(x, y){
+                return d3.ascending(x.x, y.x);
+            })
 
- 
- 
     // organize data for bar chart    
-    barChartCoord = create_bars(barChartCoord);
+            barChartCoord = create_bars(barChartCoord);
 
     // create barchart         
-    create_barChart(barChartCoord);
+            create_barChart(barChartCoord, choice);
 
     // add color to the map
-    create_map(total_race) 
+            create_map(main_data, choice) 
 })
 
-/////////////////////////////
-// This creates map with color / text
-// param - data
-// return - nothing 
-/////////////////////////////
+// This organizes data into 10 sets of 10
+// So that it can be represented as 10 bars
+// params - data
+// returns - data
 
-function create_map(final_race) {
-
-     //Update
-    // scaleLinear -  
-    // scaleThreshold
-    // scaleQuantile
-    // scaleQuantize
-    // scaleSequential 
-    // var color = d3.scaleSequential(d3.interpolatePiYG)
-    // var color = d3.scaleSequential()
-    // .interpolator(d3.interpolateViridis);
-  
-
-    // var gradient = ["#3CC953", "#47D268", "#52DB7D", "#5DE493", "#68EDA8", "#74F7BE"]
-    // var gradient = ['blue', 'green', 'red', 'orange', 'yellow']
-    // var gradient = ['IndianRed', 'LightCoral', 'Salmon', 'DarkSalmon', 'LightSalmon', 'Crimson', 'Red', 'FireBrick', 'DarkRed']
-    var gradient = ['red', 'yellow']
-    // var domain = [0,10,20,30,40,50,60,70]; 
-
-    // var domain = [5, 20, 35, 50, 65]; 
-    var domain = [0,70]; 
-
-    // 45 55  65 75 85 
+function create_bars(here) {
  
-    // var color = d3.scaleSequential(d3.interpolatePiYG) 
-    //     .domain([0, 70])
-    // //     .interpolator(d3.interpolateViridis)
-    var color = d3.scaleSequential(d3.interpolatePuOr)
-    .domain([0, 70])
-
-    
- 
-    // .domain(domain)
-    // var color = d3.scaleLinear()
-        // .range(gradient)
-
-    var map = build.svg.append('g')
-        .attr('class', 'boundary');
-    
-    mexico = map.selectAll('path')
-        .data(states.features);
-    
-    // create map - 
-    mexico.enter()
-        .append('path')
-       
-        .attr('d', build.path)
-        
-        .attr('id', function(d, i) {
-            console.log("d ", d)
-            console.log("i ", i)
-            
-            return d.properties.GEOID;
-        })
-        .attr('fill', function(d, i) {
-            console.log("d ", d)
-            console.log("i ", i)
-            // console.log(income2[i].name  +" -- ", income2[i].race_ratio +" -- ", income2[i].csvID+ "--id--" + i)
-            next = color(income2[i].race_ratio);
-            console.log(next, income2[i].race_ratio, income2[i].name, income2[i].csvID);
-          
-            return next
-          
-        })
-        .on('click', create_modal)
-
-        ////////////
-
-    
-    
-        // var value = function(d) {
-        //     return +d.properties[parameter];
-        // },
-
-        // .attr('fill', function (d) {
-        //     return colorScale(value(d))
-        //   }
-     
-        
-    //Update
-    // mexico.attr('fill', '#eee');
-    //Exit
-    mexico.exit().remove();
-
-    ////////////////////////////////////////
-    // get and add county names - 
-    var cityText = build.svg.selectAll('text')
-        .data(states.features);
- 
-    cityText.enter()
-        .append('text')
-        .style("font", "11px times")
-        .style("padding-left", "-10px")
-        .text(function (d) {
-            return d.properties.NAME;
-        })
-        .attr("transform", function (d) { 
-            return "translate(" + build.path.centroid(d)  + ")"; 
-        })
-        .attr("dx", function (d) { 
-            return d.properties.dx || "-1.5em"; 
-        })
-        .attr("dy", function (d) { 
-            return d.properties.dy || "0.35em"; 
-        })
+    var data=[];
+    var c =0;
+    // creates 3 sets of 4
+    for (var v=0; v<10; v++){
+        var x = 0;
+        var y = 0;
+        for (var w=0+c;  w<10+c; w++) {
+            x += (here[w].x);
+            y += (here[w].y);
+        }
+        data.push({x, y});
+        data[v].x=Math.round(data[v].x/10);
+        data[v].y=Math.round(data[v].y/10);
+        c+=10;
     }
  
- 
+    return data;
 }
-
 /////////////////////////////
 // This creates bar chart
 // param - data
 // return - nothing 
 /////////////////////////////
 
-function create_barChart(barChartCoord) {
+function create_barChart(barChartCoord, choice) {
 
     var width2 =900, 
         height2 =260;
@@ -368,7 +251,13 @@ function create_barChart(barChartCoord) {
         .attr("y", function(d) { return y(d.y); })
         .attr("height", function(d) { return height2 - y(d.y); })
       
- 
+ // add title? 
+ svg2.append("g")
+    .append('text')
+    .attr('x', 35)
+    .attr('y', -15)
+    .style("font", "24px times")
+    .text('STATE-WIDE STATS')
 
     // add the x Axis and HEADER
     svg2.append("g")
@@ -393,10 +282,9 @@ function create_barChart(barChartCoord) {
         // translate (lower-left, up/down)
         .attr('transform', 'translate(-40,180)rotate(-90)')
         .style("font", "24px times")
-        .text('black pop. %'); 
+        .text(choice +" pop. %"); 
 }
 
- 
 // This creates the info - modal 
 // on click 
 // param - data
@@ -406,14 +294,15 @@ function create_modal(d) {
     // modal pt. 1
     // var elem = document.querySelector('.modal');
     // var instance = M.Modal.init(elem);
+    
     var z = d.properties.GEOID;
-    income2.forEach(function(e, i) {
-        if (z == e.csvID) {
-            name = e.name;
-            income = e.income;
-            race = e.race_ratio;
-            csvID = e.csvID;
-            hispanic_ratio= e.hispanic_ratio;
+    main_data.forEach(function(e, i) {
+        if (z == e.properties.GEOID) {
+            name = e.properties.NAME;
+            income = e.properties.INCOME;
+            race = e.properties.BLACK_PERCENT;
+            csvID = e.properties.GEOID;
+            hispanic_ratio= e.properties.HISPANIC_PERCENT;
         }
     })         
    //modal pt.2 
@@ -421,20 +310,17 @@ function create_modal(d) {
  
  // add data to the table - 
     d3.select("#place1")
-    .attr('class', 'text3')
-        .html("<br>" +
+        .attr('class', 'text3')
+        .html("SINGLE COUNTY STATS"+"<br>"+
             name + "<br>"+"Mean Household Income:   $" + 
             income + " K<br>" + "Black Percentage: " + 
             race + " %<br>" + "Brown Percentages:" +
-            hispanic_ratio + " %") 
-        
-
+            hispanic_ratio + " %").style("text-decoration", "none")
     color_bar(d, income);
 };
 
 function color_bar(d, income) {
      
-
     d3.selectAll('.bar')
     // .filter(function(d) {return d})
     .style('fill', '#277b2e'); 
@@ -453,44 +339,97 @@ var id =0;
         case (income>58 && income <=60 ): id = '60'; break;
         case (income>60 && income <=63 ): id = '63'; break;
         case (income>63 && income <=69 ): id = '69'; break;
-        case (income>70): id = '85'; break;
-        
+        case (income>70): id = '85'; break;        
     }
-
 
    d3.select('#d'+id)
     .style('fill', 'black')
-
-        
     // make all bars blue - 
     // which bar = income? 
     // make that red
 }
 
-// This organizes data into 10 sets of 10
-// So that it can be represented as 10 bars
-// params - data
-// returns - data
+/////////////////////////////
+// This creates map with color / text
+// param - data
+// return - nothing 
+/////////////////////////////
 
-function create_bars(here) {
+function create_map(main_data, choice) {
  
-    var data=[];
-    var c =0;
-    // creates 3 sets of 4
-    for (var v=0; v<10; v++){
-        var x = 0;
-        var y = 0;
-        for (var w=0+c;  w<10+c; w++) {
-            x += (here[w].x);
-            y += (here[w].y);
-        }
-        data.push({x, y});
-        data[v].x=Math.round(data[v].x/10);
-        data[v].y=Math.round(data[v].y/10);
-        c+=10;
+   var color = d3.scaleSequential(d3.interpolatePiYG)
+   .domain([0, 70])
+
+build.svg.append("g")
+  .attr("class", "legendLinear")
+  .attr("transform", "translate(280,20)");
+
+var legendLinear = d3.legendColor()
+  .shapeWidth(30)
+  .title(choice + " Percent")
+  .orient('horizontal')
+  .scale(color);
+
+build.svg.select(".legendLinear")
+  .call(legendLinear);
+
+  ///////
+   // .domain(domain)
+   // var color = d3.scaleLinear()
+    // .range(gradient)
+
+   var map = build.svg.append('g')
+       .attr('class', 'boundary');
+   
+   mexico = map.selectAll('path')
+       .data(states.features);
+ 
+   
+   // create map - 
+   mexico.enter()
+       .append('path') 
+       .attr('d', build.path)
+       .attr('id', function(d, i) {
+           return d.properties.GEOID;
+       })
+       .attr('fill', function(d, i) {
+            if (choice=="Black") { 
+                next = color(d.properties.BLACK_PERCENT)
+            } else if (choice=="Brown") {
+                next = color(d.properties.HISPANIC_PERCENT) 
+            }
+           return next
+       })
+       .on('click', create_modal)
+
+   //Update
+   // mexico.attr('fill', '#eee');
+   //Exit
+   mexico.exit().remove();
+
+   ////////////////////////////////////////
+   // get and add county names - 
+   var cityText = build.svg.selectAll('text')
+       .data(states.features);
+
+   cityText.enter()
+       .append('text')
+       .style("font", "11px times")
+       .style("padding-left", "-10px")
+       .text(function (d) {
+           return d.properties.NAME;
+       })
+       .attr("transform", function (d) { 
+           return "translate(" + build.path.centroid(d)  + ")"; 
+       })
+       .attr("dx", function (d) { 
+           return d.properties.dx || "-1.5em"; 
+       })
+       .attr("dy", function (d) { 
+           return d.properties.dy || "0.35em"; 
+       })
+
     }
- 
-    return data;
 }
 
 function geoID (d) {
