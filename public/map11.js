@@ -1,7 +1,8 @@
 $( document ).ready(function() {
     $(".button-collapse").sideNav();
-  });
-
+    window.location.href="#description"
+});
+    
 // svg variables
 var height = 550,
     width = 1450;
@@ -32,6 +33,7 @@ var choice = "Black";
 var build = {};
 var final_race =[];
 $("#black").on("click", function() {
+    window.location.href = "#top"
     barChartCoord=null;
     $("#map").empty();
     $("#chartArea").empty();
@@ -40,6 +42,7 @@ $("#black").on("click", function() {
 
 })   
 $("#brown").on("click", function() {
+    window.location.href = "#top"
     barChartCoord =null;
     $("#map").empty();
     $("#chartArea").empty();
@@ -152,58 +155,40 @@ function setup_map (choice, build) {
                     }  
                 })
             })
+            // main_data - 100 objects with ALL possible state data
             main_data = states.features;          
            barChartCoord = [];
-        // manage income / ethnicity data
+
+            // loop through main_data to get x y positioning for bar chart
+            // IF YOU WANT extra details in abarchart - add them here.... 
 
             main_data.forEach(function (e, i) {
         
                 if (choice=="Black") {
-                    barChartCoord.push({x:e.properties.INCOME_PERCENT, y:e.properties.BLACK_PERCENT})
+                    // barChartCoord.push({x:e.properties.INCOME_PERCENT, y:e.properties.BLACK_PERCENT})
+                    barChartCoord.push({y:e.properties.INCOME_PERCENT, x:e.properties.BLACK_PERCENT, geoId:e.properties.GEOID})
+                    // e.properties.x = e.properties.BLACK_PERCENT; e.properties.y = e.properties.INCOME_PERCENT;
                 } else if (choice == "Brown"){
-                    barChartCoord.push({x:e.properties.INCOME_PERCENT, y:e.properties.HISPANIC_PERCENT})                
+                    barChartCoord.push({y:e.properties.INCOME_PERCENT, x:e.properties.HISPANIC_PERCENT, geoId:e.properties.GEOID})                
+                    // e.properties.x = e.properties.HISPANIC_PERCENT; e.properties.y = e.properties.INCOME_PERCENT;
                 };                    
             })  //end of income loop
-        
+         
             barChartCoord.sort(function(x, y){
-                return d3.ascending(x.x, y.x);
+                return d3.descending(x.y, y.y);
             })
-
+          console.log(barChartCoord)
     // organize data for bar chart    
-            barChartCoord = create_bars(barChartCoord);
+            // barChartCoord = create_bars(barChartCoord);
 
     // create barchart         
-            create_barChart(barChartCoord, choice);
+            create_barChart(barChartCoord, choice, main_data);
 
     // add color to the map
             create_map(main_data, choice) 
 })
 
-// This organizes data into 10 sets of 10
-// So that it can be represented as 10 bars
-// params - data
-// returns - data
 
-function create_bars(here) {
- 
-    var data=[];
-    var c =0;
-    // creates 3 sets of 4
-    for (var v=0; v<10; v++){
-        var x = 0;
-        var y = 0;
-        for (var w=0+c;  w<10+c; w++) {
-            x += (here[w].x);
-            y += (here[w].y);
-        }
-        data.push({x, y});
-        data[v].x=Math.round(data[v].x/10);
-        data[v].y=Math.round(data[v].y/10);
-        c+=10;
-    }
- 
-    return data;
-}
 /////////////////////////////
 // This creates bar chart
 // param - data
@@ -212,173 +197,176 @@ function create_bars(here) {
 
 function create_barChart(barChartCoord, choice) {
 
-      
+     
     
     // 4. set canvas: add body > svg > group > move top left margin
    svg2 = d3.select("#chartArea")
         .append("svg")
         .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "-120 -60 500 400")
+        .attr("viewBox", "-120 -60 300 400")
         .classed("svg-content-responsive", true)
-        //1 - higher goes left, 
-        //2 - higher goes up
+        //1 - higher makes inside goes left, 
+        //2 - higher makes inside goes up
         //3- lower makes inside bigger
-        //4- highest_incomeer makes border larger
+        //4- higher makes border larger
         //class to make it responsive
         .append("g")
-
-        var width2 =900, 
+            
+    var width2 =360,
         height2 =260;
     
-    // 2. set the ranges
-    // why scaleBand? 
-    var x = d3.scaleBand()
-            .domain(barChartCoord.map(function(d) { return d.x; }))
-            .range([0, width2/2.5])
-            .padding(0.4);
-    var y = d3.scaleLinear()
-            .domain([0, d3.max(barChartCoord, function(d) { return d.y; })])
-            .range([height2, 0]);  
+    // 2. set the ranges // blacks
+
+    var xScale = d3.scaleLinear()
+        .domain([0, d3.max(barChartCoord, function(d) { return d.x; })])
+        .range([0, width2-10]);   
+var jf =[]
+var jj=barChartCoord.map(function(d) { return d.y; })
+var jx = jj.map(function(e, i) { 
+    return e        
+        
+    })
+
+
+    var yScale = d3.scaleBand()
+            // .domain(function(d) {return d.y})
+            .domain(barChartCoord.map(function(d) { return d.y; }))
+            .range([0, (height2)])
             
-    // 2.  - Scale the range of the data in the domains
-    
-    
-    
+            .padding(.6);
+
+    var xBegins=-40
+ 
     // 4. add barchart 
     svg2.selectAll(".bar")
         .data(barChartCoord)
-        .enter().append("rect")
+        .enter()
+        .append("rect")
         .attr("class", "bar")
-        .attr("x", function(d) { return x(d.x); })
-        .attr("width", x.bandwidth())
-        .attr('id', function(d) {return Math.floor(x(d.x))})
-        .attr('id',  function(barChartCoord) { return 'd'+Math.floor(barChartCoord.x); }) 
-        .attr("y", function(d) { return y(d.y); })
-        .attr("height", function(d) { return height2 - y(d.y); })
-      
- // add title? 
- svg2.append("g")
+        .attr('id',  function(barChartCoord) { return "d"+barChartCoord.geoId; }) 
+        .attr("name", function(d) {return d.name})    
+        .attr('x', xBegins)
+        .attr("width", function(d) { return xScale(d.x); })
+        .attr("y", function(d) { return yScale(d.y); })
+        .attr("height", function(d) { return yScale.bandwidth()})
+
+        
+    var margin = 25;
+         // X - AXIS // passing the x scale band in 
+    var xAxis = d3.axisBottom()
+         .scale(xScale)
+        //  .ticks(10)
+        //  .tickSize(12) // <-A
+        //  .tickPadding(10) // <-B
+         // .tickFormat(d3.format(".0%")); // <-C
+    
+    svg2.append("g")
+        .style("font", "20px times")        
+        .attr("transform", "translate(" + xBegins +"," +(height2+10) + ")")
+        .call(xAxis)
+    
+    svg2.append('g')
+        .append('text')
+        .attr('x', 25)
+        .attr('y', 330)
+        .style("font", "24px times")
+        .text(choice +" pop. %")
+    
+    
+    var yAxis = d3.axisLeft()
+        .scale(yScale)
+        .tickValues(yScale.domain().filter(function(d,i){ return !(i%10)}));
+        // .tickValues([40, 50, 60, 70,  90])
+        // .tickPadding(10)
+
+    // Y-AXIS
+    svg2.append("g")
+        .style("font", "20px times")
+        .attr("transform", "translate(" + -50 +"," + 0 + ")")
+        .call(yAxis)
+   
+    
+    svg2.append('g')
+        .append('text')
+        // translate (lower-left, up/down)
+        .attr('transform', 'translate(-100,250)rotate(-90)')
+        .style("font", "24px times")
+        
+        .text('median income in thousands')
+
+        // add title? 
+svg2.append("g")
     .append('text')
     .attr('x', 35)
     .attr('y', -25)
     .style("font", "24px times")
+    .style("id", "title")
     .text('STATE-WIDE STATS')
 
-    // add the x Axis and HEADER
-    svg2.append("g")
-        .style("font", "20px times")
-        // .classed("bar_text", true)
-        .attr("transform", "translate(0," + height2 + ")")
-        .call(d3.axisBottom(x));
-    
-    console.log(d3.axisBottom(x))
-    svg2.append('g')
-        .append('text')
-        .attr('x', 25)
-        .attr('y', 310)
-        .style("font", "24px times")
-        .text('median income in thousands')
 
-    // add the y Axis and HEADER
-    svg2.append("g")
-        .style("font", "20px times")
-        .call(d3.axisLeft(y))
-    svg2.append('g')
-        .append('text')
-        // translate (lower-left, up/down)
-        .attr('transform', 'translate(-40,180)rotate(-90)')
-        .style("font", "24px times")
-        .text(choice +" pop. %"); 
-}
+    }
+
 
 // This creates the info - modal 
 // on click 
 // param - data
 // return - ? 
 
+
 function create_modal(d) {
-    // modal pt. 1
-    // var elem = document.querySelector('.modal');
-    // var instance = M.Modal.init(elem);
-    
-    var z = d.properties.GEOID;
-    main_data.forEach(function(e, i) {
-        if (z == e.properties.GEOID) {
-            name = e.properties.NAME;
-            income = e.properties.INCOME_PERCENT;
-            race = e.properties.BLACK_PERCENT;
-            csvID = e.properties.GEOID;
-            hispanic_ratio= e.properties.HISPANIC_PERCENT;
-        }
-    })         
-   //modal pt.2 
-    // instance.open();
- 
- // add data to the table - 
-    // d3.select("#place1")
-    // .attr('class', 'text3')
-    //     .html("<br>" +
-    //         name + "<br>"+"Mean Household Income:   $" + 
-    //         income + " K<br>" + "Black Percentage: " + 
-    //         race + " %<br>" + "Brown Percentages:" +
-    //         hispanic_ratio + " %") 
-
-svg3 = d3.select("#place1")
-        .attr('x', 35)
-        .attr('y', 0)
-        .attr('class', 'text3')
-        .text('COUNTY-LEVEL STATS') 
-
-svg3.append('g')
-        .attr('class', 'text3')
-        .attr('x', 65)
-        .attr('y', 25)         
-        .html("<br>"+"</br>"+
-            name + "<br>"+"Median Household Income:   $" + 
-            income + " K<br>" + "Black Percentage: " + 
-            race + " %<br>" + "Brown Percentages:" +
-            hispanic_ratio + " %")
+    // $("#chartArea").slideDown("slow");
+    window.location.href = "#chartArea"
+    // var to =document.getElementById("chartArea")
+    // document.body.scrollTop =to
         
-    color_bar(d, income);
-    };
-
-function color_bar(d, income) {
-     
     d3.selectAll('.bar')
     // .filter(function(d) {return d})
-    .style('fill', '#277b2e'); 
-var id =0;
+    .style('fill', '#277b2e')
+    .style('height', 2);
 
-// 49
-// 51
-// 54
-// 57
-// 61
-// 63
-// 67
-// 73
-// 86
-    switch (true) {
-        case (income<=45 ): id='45'; break;
-        case (income>45 && income <=48 ): id = '48'; break;
-        case (income>48 && income <=51 ):  id = '51'; break;
-        
-        case (income>51 && income <=52 ): id = '52'; break;
-        case (income>52 && income <=55 ):  id = '55'; break;
-        
-        case (income>55 && income <=58 ): id = '58'; break;
-        case (income>58 && income <=60 ): id = '60'; break;
-        case (income>60 && income <=63 ): id = '63'; break;
-        case (income>63 && income <=69 ): id = '69'; break;
-        case (income>70): id = '85'; break;        
-    }
+// var id =0;
 
-   d3.select('#d'+id)
+ 
+ 
+console.log(d.properties.GEOID)
+     
+//    d3.select('#d'+chosen_state)
+d3.select("#d"+d.properties.GEOID)
     .style('fill', 'black')
+    .style('height', 10)
     // make all bars blue - 
     // which bar = income? 
     // make that red
+
+
+
+    svg3 = d3.select("#place1")
+    .attr('x', 35)
+    .attr('y', 0)
+    .attr('class', 'text3')
+    .html('COUNTY-LEVEL STATS'+'<br>'+'__________________'+'<br>')
+
+svg3.append('g')
+    .attr('class', 'text3')
+    .attr('x', 65)
+    .attr('y', 25)         
+    .html(
+            d.properties.NAME + "<br>"+"Median Household Income:   $" + 
+            d.properties.INCOME + " K<br>" + "Black Percentage: " + 
+            d.properties.BLACK_PERCENT + " %<br>" + "Brown Percentages:" +
+            d.properties.HISPANIC_PERCENT + " %" +"<br>" +"_______________"+"<br>")
+
+
+// svg3.append('g')
+//     .text("This county falls into bar number: "+ j)
+    //   In this bar, the average income is $"+barChartCoord[bar].x +" and the average " + choice + " perentage is " + barChartCoord[bar].y) 
+     
+     
+ 
+    
+
 }
+
 
 /////////////////////////////
 // This creates map with color / text
@@ -390,6 +378,8 @@ function create_map(main_data, choice) {
     var color = d3.scaleSequential(d3.interpolatePiYG)
     /////////////////////////////
    .domain([0, 70])
+
+//    http://d3-legend.susielu.com/
 
 build.svg.append("g")
   .attr("class", "legendLinear")
@@ -431,7 +421,11 @@ build.svg.select(".legendLinear")
             }
            return next
        })
-       .on('click', create_modal)
+       .on('click', function(d) {
+           console.log(event.target.id)
+           create_modal(d)
+       })
+    // .on('click', color_bar)
 
    //Update
    // mexico.attr('fill', '#eee');
@@ -473,3 +467,34 @@ function click (d) {
     d3.select('#' + geoID(d)).attr('fill-opacity', 1);
 };
  
+
+// This organizes data into 10 sets of 10
+// So that it can be represented as 10 bars
+// params - array of objects: [{x:3, y:3}, {x:4, y:7}.. ]
+// returns - data
+
+function create_bars(barChartCoord) {
+ 
+    var data=[];
+    var c =0;
+    // creates 3 sets of 4
+    for (var v=0; v<10; v++){
+        var x = 0;
+        var y = 0;
+        // get the x / y of the first object - 
+        // to this, add the x y of the next 9 objects
+        // 10 objects total
+        for (var w=0+c;  w<10+c; w++) {
+            x += (barChartCoord[w].x);
+            y += (barChartCoord[w].y);
+        }
+        data.push({x, y});
+        //outer loop - take x/y of this new object and get an average
+        data[v].x=Math.round(data[v].x/10);
+        data[v].y=Math.round(data[v].y/10);
+        // counter for the next 10 objects
+        c+=10;
+    }
+ 
+    return data;
+}
