@@ -1,6 +1,6 @@
 $( document ).ready(function() {
     $(".button-collapse").sideNav();
-    window.location.href="#description"
+    window.location.href="#top"
 });
     
 // svg variables
@@ -53,7 +53,9 @@ $("#brown").on("click", function() {
 
 build_map(choice, build);
 
+
 function build_map(choice, build) { 
+    window.location.href = "#top"
     
 // define projection, which convert long-lat to x-y coord
 build.projection = d3.geoMercator()
