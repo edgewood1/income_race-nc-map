@@ -1,6 +1,22 @@
 # income_race-nc-map
 
-Uses D3 to map census demographics
+An interactive map visualizing income and race demographics across North Carolina using U.S. Census data.
 
-https://rocky-stream-23631.herokuapp.com/
+## Features
 
+- D3-powered choropleth map of NC census demographics
+- Node/Express backend serving census data via REST routes
+
+## Tech Stack
+
+- **Frontend:** D3.js, HTML/CSS
+- **Backend:** Node.js, Express
+
+## Getting Started
+
+```bash
+npm install
+node server.js
+```
+
+Open `http://localhost:3000` in your browser.
